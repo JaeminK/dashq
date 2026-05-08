@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dashq"
+version = "0.1.0"
+description = "Runtime loader for DASH-Q packed quantized checkpoints"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+dependencies = [
+    "accelerate>=1.0.0",
+    "huggingface-hub>=1.14.0",
+    "safetensors>=0.4.0",
+    "torch>=2.4.0",
+    "transformers>=5.8.0",
+]
+
+[project.scripts]
+dashq-info = "dashq.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
