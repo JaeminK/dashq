@@ -4,28 +4,60 @@ import torch
 import torch.nn as nn
 
 
+def _tensorized_moe_dims(module: nn.Module) -> tuple[int, int] | None:
+    if not (
+        hasattr(module, "num_experts")
+        and isinstance(getattr(module, "gate_up_proj", None), torch.nn.Parameter)
+        and isinstance(getattr(module, "down_proj", None), torch.nn.Parameter)
+    ):
+        return None
+
+    gate_up_shape = tuple(module.gate_up_proj.shape)
+    down_shape = tuple(module.down_proj.shape)
+    if len(gate_up_shape) != 3 or len(down_shape) != 3:
+        return None
+
+    num_experts = int(module.num_experts)
+    if gate_up_shape[0] != num_experts or down_shape[0] != num_experts:
+        return None
+
+    if gate_up_shape[1] % 2 != 0:
+        return None
+
+    hidden_size = int(getattr(module, "hidden_size", getattr(module, "hidden_dim", gate_up_shape[2])))
+    expert_dim = int(getattr(module, "expert_dim", getattr(module, "intermediate_dim", gate_up_shape[1] // 2)))
+    if gate_up_shape != (num_experts, 2 * expert_dim, hidden_size):
+        return None
+    if down_shape != (num_experts, hidden_size, expert_dim):
+        return None
+    return hidden_size, expert_dim
+
+
 def _has_tensorized_moe_projections(module: nn.Module) -> bool:
-    required_attrs = ("gate_up_proj", "down_proj", "num_experts", "hidden_size", "expert_dim")
-    return (
-        all(hasattr(module, attr) for attr in required_attrs)
-        and isinstance(module.gate_up_proj, torch.nn.Parameter)
-        and isinstance(module.down_proj, torch.nn.Parameter)
-    )
+    return _tensorized_moe_dims(module) is not None
 
 
 def _forward_tensorized_moe_with_linear_experts(
     self,
     hidden_states: torch.Tensor,
+    top_k_index=None,
+    top_k_weights=None,
     router_indices=None,
     routing_weights=None,
 ) -> torch.Tensor:
-    batch_size = hidden_states.shape[0]
-    hidden_states = hidden_states.reshape(-1, self.hidden_size)
+    input_shape = hidden_states.shape
+    hidden_size = getattr(self, "hidden_size", None)
+    if hidden_size is None:
+        hidden_size = getattr(self, "hidden_dim")
+    hidden_size = int(hidden_size)
+    hidden_states = hidden_states.reshape(-1, hidden_size)
     next_states = torch.zeros_like(hidden_states, dtype=hidden_states.dtype, device=hidden_states.device)
     num_experts = self.num_experts
+    expert_indices = top_k_index if top_k_index is not None else router_indices
+    expert_weights = top_k_weights if top_k_weights is not None else routing_weights
 
     with torch.no_grad():
-        expert_mask = torch.nn.functional.one_hot(router_indices, num_classes=num_experts)
+        expert_mask = torch.nn.functional.one_hot(expert_indices, num_classes=num_experts)
         expert_mask = expert_mask.permute(2, 1, 0)
         active_experts = torch.greater(expert_mask.sum(dim=(-1, -2)), 0).nonzero()
 
@@ -33,24 +65,27 @@ def _forward_tensorized_moe_with_linear_experts(
         e_idx = expert_idx[0].item()
         if e_idx >= self.num_experts:
             continue
-        _, token_idx = torch.where(expert_mask[e_idx])
+        top_k_pos, token_idx = torch.where(expert_mask[e_idx])
         current_state = hidden_states[token_idx]
         gate_up = self.gate_up_proj_list[e_idx](current_state)
-        gate, up = gate_up[..., ::2], gate_up[..., 1::2]
-
-        if hasattr(self, "limit") and self.limit is not None:
-            gate = gate.clamp(min=None, max=self.limit)
-            up = up.clamp(min=-self.limit, max=self.limit)
-
-        alpha_val = self.alpha if hasattr(self, "alpha") else 1.702
-        glu = gate * torch.sigmoid(gate * alpha_val)
-        gated_output = (up + 1) * glu
+        gate, up = gate_up.chunk(2, dim=-1)
+        if hasattr(self, "act_fn"):
+            gated_output = self.act_fn(gate) * up
+        else:
+            if hasattr(self, "limit") and self.limit is not None:
+                gate = gate.clamp(min=None, max=self.limit)
+                up = up.clamp(min=-self.limit, max=self.limit)
+            alpha_val = self.alpha if hasattr(self, "alpha") else 1.702
+            gated_output = (up + 1) * (gate * torch.sigmoid(gate * alpha_val))
         out = self.down_proj_list[e_idx](gated_output)
-        expert_routing_weight = routing_weights[token_idx, e_idx].unsqueeze(-1)
+        if expert_weights.shape == expert_indices.shape:
+            expert_routing_weight = expert_weights[token_idx, top_k_pos].unsqueeze(-1)
+        else:
+            expert_routing_weight = expert_weights[token_idx, e_idx].unsqueeze(-1)
         weighted_output = out * expert_routing_weight
         next_states.index_add_(0, token_idx, weighted_output.to(hidden_states.dtype))
 
-    return next_states.view(batch_size, -1, self.hidden_size)
+    return next_states.view(input_shape)
 
 
 def _build_linear_from_expert_weight(
@@ -66,7 +101,7 @@ def _build_linear_from_expert_weight(
         device=weight_slice.device,
         dtype=weight_slice.dtype,
     )
-    linear.weight = nn.Parameter(weight_slice.t().contiguous(), requires_grad=False)
+    linear.weight = nn.Parameter(weight_slice.contiguous(), requires_grad=False)
     if bias_slice is not None:
         linear.bias = nn.Parameter(bias_slice.contiguous(), requires_grad=False)
     return linear
@@ -82,8 +117,10 @@ def expose_tensorized_moe_experts_as_linears(model: nn.Module) -> int:
         device = module.gate_up_proj.device
         dtype = module.gate_up_proj.dtype
         num_experts = int(module.num_experts)
-        hidden_size = int(module.hidden_size)
-        expert_dim = int(module.expert_dim)
+        dims = _tensorized_moe_dims(module)
+        if dims is None:
+            continue
+        hidden_size, expert_dim = dims
 
         gate_up_weight = module.gate_up_proj
         down_weight = module.down_proj
