@@ -9,6 +9,8 @@ import torch.nn.functional as F
 
 
 def _packed_length(numel: int, nbits: int) -> int:
+    if int(nbits) < 1 or int(nbits) > 8:
+        raise ValueError(f"nbits must be between 1 and 8, got {nbits}.")
     values_per_word = max(1, 32 // int(nbits))
     return math.ceil(int(numel) / values_per_word)
 
@@ -31,6 +33,8 @@ _UNPACK_IMPLS: dict[int, Any] = {}
 
 def _unpack_int_values(packed: torch.Tensor, nbits: int, numel: int) -> torch.Tensor:
     nbits = int(nbits)
+    if nbits < 1 or nbits > 8:
+        raise ValueError(f"nbits must be between 1 and 8, got {nbits}.")
     if nbits not in _UNPACK_IMPLS:
         _UNPACK_IMPLS[nbits] = _build_unpack_impl(nbits)
     return _UNPACK_IMPLS[nbits](packed, int(numel))
@@ -86,8 +90,8 @@ class PackedQuantizedLinear(nn.Module):
 
     def dequantize_weight(self, dtype: torch.dtype) -> torch.Tensor:
         w_int = _unpack_int_values(self.W_q_packed, self.nbits, self.numel)
-        w_int = w_int.view(self.num_groups, self.group_size).to(self.scale_zero_dtype)
-        weight = (w_int - self.zero) * self.scale
+        w_int = w_int.view(self.num_groups, self.group_size).to(dtype)
+        weight = (w_int - self.zero.to(dtype)) * self.scale.to(dtype)
         return weight.view(self.out_features, self.quant_in_features).to(dtype=dtype)
 
     def forward_linear(self, x: torch.Tensor) -> torch.Tensor:

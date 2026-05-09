@@ -34,6 +34,14 @@ def _dtype_from_string(value: str | None, default: torch.dtype = torch.bfloat16)
         "float32": torch.float32,
         "fp32": torch.float32,
     }
+    if hasattr(torch, "float8_e5m2"):
+        mapping["fp8"] = torch.float8_e5m2
+        mapping["fp8_e5m2"] = torch.float8_e5m2
+        mapping["float8_e5m2"] = torch.float8_e5m2
+    if hasattr(torch, "float8_e4m3fn"):
+        mapping.setdefault("fp8", torch.float8_e4m3fn)
+        mapping["fp8_e4m3"] = torch.float8_e4m3fn
+        mapping["float8_e4m3fn"] = torch.float8_e4m3fn
     return mapping.get(key, default)
 
 
