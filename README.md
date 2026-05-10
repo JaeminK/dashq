@@ -24,9 +24,14 @@ Runtime loader for DASH-Q quantized checkpoints.
 | Qwen3.6-35B-A3B | [Qwen3.6-35B-A3B-DASHQ-INT2-g32-fp8_e5m2](https://huggingface.co/jkim96/Qwen3.6-35B-A3B-DASHQ-INT2-g32-fp8_e5m2) | 13.49 GB | 71.90 GB | fp8_e5m2 | 8.58 | 66.2 | 77.7 | 55.2 | 79.8 | 77.2 | 69.7 | 42.0 | 80.2 | 48.2 | 66.0 |
 | Qwen3.5-122B-A10B | [Qwen3.5-122B-A10B-DASHQ-INT2-g32](https://huggingface.co/jkim96/Qwen3.5-122B-A10B-DASHQ-INT2-g32) | 49.25 GB | 250.17 GB | float16 | 6.89 | 69.0 | 84.0 | 62.5 | 80.8 | 80.8 | 73.5 | 45.4 | 71.3 | 51.7 | 71.4 |
 | Qwen3.5-122B-A10B | [Qwen3.5-122B-A10B-DASHQ-INT2-g32-fp8_e5m2](https://huggingface.co/jkim96/Qwen3.5-122B-A10B-DASHQ-INT2-g32-fp8_e5m2) | 41.72 GB | 250.17 GB | fp8_e5m2 | 7.08 | 67.9 | 82.0 | 60.7 | 81.0 | 80.2 | 72.5 | 44.4 | 67.8 | 52.2 | 70.5 |
+| Qwen3.5-35B-A3B | [Qwen3.5-35B-A3B-DASHQ-INT4-g32](https://huggingface.co/jkim96/Qwen3.5-35B-A3B-DASHQ-INT4-g32) | 23.99 GB | 71.90 GB | float16 | 6.65 | 70.5 | 80.1 | 61.4 | 83.0 | 82.1 | 74.1 | 42.8 | 84.5 | 53.8 | 72.4 |
+| Qwen3.5-35B-A3B | [Qwen3.5-35B-A3B-DASHQ-INT4-g64](https://huggingface.co/jkim96/Qwen3.5-35B-A3B-DASHQ-INT4-g64) | 21.89 GB | 71.90 GB | float16 | 6.69 | 70.5 | 79.0 | 60.5 | 83.0 | 82.0 | 74.7 | 43.6 | 85.1 | 53.8 | 72.9 |
 | Qwen3.5-35B-A3B | [Qwen3.5-35B-A3B-DASHQ-INT4-g128](https://huggingface.co/jkim96/Qwen3.5-35B-A3B-DASHQ-INT4-g128) | 20.84 GB | 71.90 GB | float16 | 6.68 | 70.3 | 79.2 | 61.5 | 83.1 | 82.0 | 74.1 | 42.6 | 84.0 | 53.6 | 72.3 |
+| Qwen3.5-35B-A3B | [Qwen3.5-35B-A3B-DASHQ-INT3-g64](https://huggingface.co/jkim96/Qwen3.5-35B-A3B-DASHQ-INT3-g64) | 18.53 GB | 71.90 GB | float16 | 6.99 | 69.7 | 81.6 | 61.1 | 82.0 | 80.7 | 73.9 | 42.4 | 84.3 | 51.3 | 69.8 |
+| Qwen3.5-35B-A3B | [Qwen3.5-35B-A3B-DASHQ-INT3-g128](https://huggingface.co/jkim96/Qwen3.5-35B-A3B-DASHQ-INT3-g128) | 17.48 GB | 71.90 GB | float16 | 7.14 | 70.0 | 81.3 | 60.2 | 82.3 | 80.5 | 73.4 | 43.2 | 84.4 | 55.2 | 69.4 |
 | Qwen3.5-27B | [Qwen3.5-27B-DASHQ-INT4-g128](https://huggingface.co/jkim96/Qwen3.5-27B-DASHQ-INT4-g128) | 18.95 GB | 55.56 GB | float16 | 6.99 | 72.3 | 80.8 | 61.3 | 82.2 | 82.9 | 79.0 | 44.0 | 87.7 | 57.8 | 75.4 |
-| Qwen3.5-9B | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO |
+| Qwen3.5-27B | [Qwen3.5-27B-DASHQ-INT3-g64](https://huggingface.co/jkim96/Qwen3.5-27B-DASHQ-INT3-g64) | 17.27 GB | 55.56 GB | float16 | 7.25 | 72.8 | 83.6 | 63.0 | 81.8 | 82.0 | 78.3 | 46.6 | 87.1 | 57.3 | 75.3 |
+| Qwen3.5-9B | [Qwen3.5-9B-DASHQ-INT4-g128](https://huggingface.co/jkim96/Qwen3.5-9B-DASHQ-INT4-g128) | 8.66 GB | 19.31 GB | float16 | 8.85 | 67.5 | 77.1 | 55.6 | 80.1 | 77.2 | 71.7 | 42.0 | 82.1 | 51.7 | 69.6 |
 | gemma-4-31B-it | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO |
 | gemma-4-26B-A4B-it | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO |
 | Mistral-Medium-3.5-128B | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO |
