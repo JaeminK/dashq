@@ -108,6 +108,18 @@ def _replace_quantized_modules(
     return replaced
 
 
+def _compile_quantized_dequantization(
+    model: nn.Module,
+    compile_kwargs: dict[str, Any] | None = None,
+) -> int:
+    compile_kwargs = compile_kwargs or {}
+    compiled = 0
+    for module in model.modules():
+        if isinstance(module, PackedQuantizedLinear) and module.compile_dequantization(**compile_kwargs):
+            compiled += 1
+    return compiled
+
+
 def load_quantized(
     repo_id_or_path: str | Path,
     *,
@@ -120,6 +132,8 @@ def load_quantized(
     revision: str | None = None,
     trust_remote_code: bool = True,
     offload_folder: str | Path | None = None,
+    compile_dequantization: bool = True,
+    compile_dequantization_kwargs: dict[str, Any] | None = None,
 ) -> tuple[nn.Module, Any]:
     """Load a DASH-Q packed quantized checkpoint and tokenizer.
 
@@ -171,6 +185,8 @@ def load_quantized(
         offload_folder=offload_folder,
         strict=False,
     )
+    if compile_dequantization:
+        _compile_quantized_dequantization(model, compile_dequantization_kwargs)
     tokenizer = AutoTokenizer.from_pretrained(snapshot_path, trust_remote_code=trust_remote_code)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token

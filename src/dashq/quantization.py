@@ -87,12 +87,38 @@ class PackedQuantizedLinear(nn.Module):
             self.bias = nn.Parameter(torch.empty(self.out_features, dtype=self.linear_dtype), requires_grad=False)
         else:
             self.register_parameter("bias", None)
+        self._compiled_dequantize_weight = None
+        self._compile_dequantization_failed = False
 
-    def dequantize_weight(self, dtype: torch.dtype) -> torch.Tensor:
+    def _dequantize_weight_eager(self, dtype: torch.dtype) -> torch.Tensor:
         w_int = _unpack_int_values(self.W_q_packed, self.nbits, self.numel)
         w_int = w_int.view(self.num_groups, self.group_size).to(dtype)
         weight = (w_int - self.zero.to(dtype)) * self.scale.to(dtype)
         return weight.view(self.out_features, self.quant_in_features).to(dtype=dtype)
+
+    def compile_dequantization(self, **compile_kwargs: Any) -> bool:
+        if not hasattr(torch, "compile"):
+            return False
+        try:
+            self._compiled_dequantize_weight = torch.compile(
+                self._dequantize_weight_eager,
+                **compile_kwargs,
+            )
+        except Exception:
+            self._compiled_dequantize_weight = None
+            self._compile_dequantization_failed = True
+            return False
+        self._compile_dequantization_failed = False
+        return True
+
+    def dequantize_weight(self, dtype: torch.dtype) -> torch.Tensor:
+        if self._compiled_dequantize_weight is not None and not self._compile_dequantization_failed:
+            try:
+                return self._compiled_dequantize_weight(dtype)
+            except Exception:
+                self._compiled_dequantize_weight = None
+                self._compile_dequantization_failed = True
+        return self._dequantize_weight_eager(dtype)
 
     def forward_linear(self, x: torch.Tensor) -> torch.Tensor:
         weight = self.dequantize_weight(dtype=x.dtype)
