@@ -81,7 +81,13 @@ Runtime loader for DASH-Q quantized checkpoints.
 
 | Checkpoint | Quantized Size | Original Size | Scale/Zero Dtype | PPL | ZS Avg | ARC-E | ARC-C | PIQA | HellaSwag | WinoGrande | OBQA | CSQA | TruthfulQA | LAMBADA |
 | --- | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| [EXAONE-4.5-33B-DASHQ-INT4-g32](https://huggingface.co/jkim96/EXAONE-4.5-33B-DASHQ-INT4-g32) | 25.07 GB | 68.70 GB | float16 | 8.33 | 73.2 | 85.3 | 57.7 | 81.0 | 79.3 | 73.5 | -- | 78.1 | 57.9 | -- |
+| [EXAONE-4.5-33B-DASHQ-INT4-g64](https://huggingface.co/jkim96/EXAONE-4.5-33B-DASHQ-INT4-g64) | 23.13 GB | 68.70 GB | float16 | 8.44 | 72.8 | 84.8 | 57.9 | 80.6 | 79.1 | 72.7 | -- | 78.1 | 56.3 | -- |
+| [EXAONE-4.5-33B-DASHQ-INT4-g128](https://huggingface.co/jkim96/EXAONE-4.5-33B-DASHQ-INT4-g128) | 22.16 GB | 68.70 GB | float16 | 8.35 | 73.1 | 84.9 | 57.9 | 80.6 | 78.8 | 73.6 | -- | 77.3 | 58.4 | -- |
+| [EXAONE-4.5-33B-DASHQ-INT3-g32](https://huggingface.co/jkim96/EXAONE-4.5-33B-DASHQ-INT3-g32) | 21.97 GB | 68.70 GB | float16 | 8.63 | 72.6 | 85.1 | 57.3 | 80.5 | 78.1 | 73.9 | -- | 75.4 | 57.6 | -- |
+| [EXAONE-4.5-33B-DASHQ-INT3-g64](https://huggingface.co/jkim96/EXAONE-4.5-33B-DASHQ-INT3-g64) | 20.04 GB | 68.70 GB | float16 | 8.66 | 72.2 | 84.3 | 58.2 | 79.8 | 77.9 | 73.0 | -- | 75.8 | 56.0 | -- |
 | [EXAONE-4.5-33B-DASHQ-INT3-g128](https://huggingface.co/jkim96/EXAONE-4.5-33B-DASHQ-INT3-g128) | 19.07 GB | 68.70 GB | float16 | 8.75 | 71.9 | 83.5 | 56.7 | 80.1 | 77.8 | 72.6 | -- | 76.6 | 56.1 | -- |
+| [EXAONE-4.5-33B-DASHQ-INT2-g32](https://huggingface.co/jkim96/EXAONE-4.5-33B-DASHQ-INT2-g32) | 17.33 GB | 68.70 GB | float16 | 10.45 | 67.7 | 83.1 | 54.4 | 78.2 | 71.0 | 71.5 | -- | 70.9 | 45.0 | -- |
 | [EXAONE-4.5-33B-DASHQ-INT2-g32-fp8_e5m2](https://huggingface.co/jkim96/EXAONE-4.5-33B-DASHQ-INT2-g32-fp8_e5m2) | 15.39 GB | 68.70 GB | fp8_e5m2 | 10.68 | 67.4 | 81.4 | 53.8 | 77.4 | 70.2 | 70.6 | -- | 70.6 | 47.8 | -- |
 
 ## Install
