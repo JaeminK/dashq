@@ -2,6 +2,27 @@
 
 Runtime loader for DASH-Q quantized checkpoints.
 
+## Install
+
+```bash
+pip install git+https://github.com/JaeminK/dashq.git
+```
+
+## Quick Start
+
+```python
+from dashq import load_quantized
+
+model, tokenizer = load_quantized(
+    "jkim96/Qwen3.6-27B-DASHQ-INT2-g32",
+    device_map="auto",
+)
+device = next(model.parameters()).device
+inputs = tokenizer("DASH-Q is", return_tensors="pt").to(device)
+outputs = model.generate(**inputs, max_new_tokens=64)
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))
+```
+
 ## Supported Models
 
 ### Qwen3.6-27B
@@ -115,24 +136,3 @@ Runtime loader for DASH-Q quantized checkpoints.
 | [EXAONE-4.5-33B-DASHQ-INT3-g128](https://huggingface.co/jkim96/EXAONE-4.5-33B-DASHQ-INT3-g128) | 19.07 GB | 68.70 GB | float16 | 8.75 | 71.9 | 83.5 | 56.7 | 80.1 | 77.8 | 72.6 | -- | 76.6 | 56.1 | -- |
 | [EXAONE-4.5-33B-DASHQ-INT2-g32](https://huggingface.co/jkim96/EXAONE-4.5-33B-DASHQ-INT2-g32) | 17.33 GB | 68.70 GB | float16 | 10.45 | 67.7 | 83.1 | 54.4 | 78.2 | 71.0 | 71.5 | -- | 70.9 | 45.0 | -- |
 | [EXAONE-4.5-33B-DASHQ-INT2-g32-fp8_e5m2](https://huggingface.co/jkim96/EXAONE-4.5-33B-DASHQ-INT2-g32-fp8_e5m2) | 15.39 GB | 68.70 GB | fp8_e5m2 | 10.68 | 67.4 | 81.4 | 53.8 | 77.4 | 70.2 | 70.6 | -- | 70.6 | 47.8 | -- |
-
-## Install
-
-```bash
-pip install git+https://github.com/JaeminK/dashq.git
-```
-
-## Quick Start
-
-```python
-from dashq import load_quantized
-
-model, tokenizer = load_quantized(
-    "jkim96/Qwen3.5-9B-DASHQ-INT4-g128",
-    device_map="auto",
-)
-device = next(model.parameters()).device
-inputs = tokenizer("DASH-Q is", return_tensors="pt").to(device)
-outputs = model.generate(**inputs, max_new_tokens=64)
-print(tokenizer.decode(outputs[0], skip_special_tokens=True))
-```
