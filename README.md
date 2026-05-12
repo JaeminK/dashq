@@ -71,6 +71,32 @@ Runtime loader for DASH-Q quantized checkpoints.
 | [Qwen3.5-9B-DASHQ-INT4-g64](https://huggingface.co/jkim96/Qwen3.5-9B-DASHQ-INT4-g64) | 8.87 GB | 19.31 GB | float16 | 8.69 | 68.0 | 77.5 | 57.8 | 80.0 | 77.4 | 72.1 | 42.4 | 82.6 | 52.8 | 69.6 |
 | [Qwen3.5-9B-DASHQ-INT4-g128](https://huggingface.co/jkim96/Qwen3.5-9B-DASHQ-INT4-g128) | 8.66 GB | 19.31 GB | float16 | 8.85 | 67.5 | 77.1 | 55.6 | 80.1 | 77.2 | 71.7 | 42.0 | 82.1 | 51.7 | 69.6 |
 
+### gemma-4-31B-it
+
+| Checkpoint | Quantized Size | Original Size | Scale/Zero Dtype | PPL | ZS Avg | ARC-E | ARC-C | PIQA | HellaSwag | WinoGrande | OBQA | CSQA | TruthfulQA | LAMBADA |
+| --- | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| [gemma-4-31B-it-DASHQ-INT4-g32](https://huggingface.co/jkim96/gemma-4-31B-it-DASHQ-INT4-g32) | 22.28 GB | 62.55 GB | float16 | 1655.77 | 61.9 | 77.4 | 58.5 | 77.0 | 62.6 | 65.4 | 37.0 | 81.2 | 60.7 | 37.3 |
+| [gemma-4-31B-it-DASHQ-INT4-g64](https://huggingface.co/jkim96/gemma-4-31B-it-DASHQ-INT4-g64) | 20.45 GB | 62.55 GB | float16 | 1586.63 | 61.8 | 77.3 | 57.2 | 76.6 | 62.9 | 66.9 | 35.8 | 80.2 | 59.3 | 40.6 |
+| [gemma-4-31B-it-DASHQ-INT4-g128](https://huggingface.co/jkim96/gemma-4-31B-it-DASHQ-INT4-g128) | 19.53 GB | 62.55 GB | float16 | 1637.10 | 62.3 | 76.9 | 57.3 | 76.5 | 63.4 | 67.1 | 36.6 | 81.8 | 59.3 | 41.5 |
+| [gemma-4-31B-it-DASHQ-INT3-g32](https://huggingface.co/jkim96/gemma-4-31B-it-DASHQ-INT3-g32) | 19.35 GB | 62.55 GB | float16 | 1894.99 | 61.9 | 78.2 | 57.9 | 76.5 | 61.5 | 66.0 | 37.2 | 81.1 | 59.4 | 38.9 |
+| [gemma-4-31B-it-DASHQ-INT3-g64](https://huggingface.co/jkim96/gemma-4-31B-it-DASHQ-INT3-g64) | 17.52 GB | 62.55 GB | float16 | 1877.26 | 60.4 | 76.0 | 54.4 | 74.5 | 62.3 | 63.4 | 37.8 | 79.8 | 56.9 | 38.4 |
+| [gemma-4-31B-it-DASHQ-INT3-g128](https://huggingface.co/jkim96/gemma-4-31B-it-DASHQ-INT3-g128) | 16.60 GB | 62.55 GB | float16 | 2018.41 | 60.5 | 75.8 | 55.2 | 74.9 | 61.0 | 65.0 | 35.8 | 78.2 | 58.7 | 40.2 |
+| [gemma-4-31B-it-DASHQ-INT2-g32](https://huggingface.co/jkim96/gemma-4-31B-it-DASHQ-INT2-g32) | 14.96 GB | 62.55 GB | float16 | 2686.22 | 54.9 | 69.4 | 45.9 | 69.9 | 50.9 | 60.1 | 34.8 | 75.1 | 53.2 | 34.4 |
+| [gemma-4-31B-it-DASHQ-INT2-g32-fp8_e5m2](https://huggingface.co/jkim96/gemma-4-31B-it-DASHQ-INT2-g32-fp8_e5m2) | 13.13 GB | 62.55 GB | fp8_e5m2 | 2535.54 | 54.8 | 68.9 | 44.6 | 71.0 | 51.6 | 62.0 | 35.0 | 71.4 | 54.5 | 34.5 |
+
+### gemma-4-26B-A4B-it
+
+| Checkpoint | Quantized Size | Original Size | Scale/Zero Dtype | PPL | ZS Avg | ARC-E | ARC-C | PIQA | HellaSwag | WinoGrande | OBQA | CSQA | TruthfulQA | LAMBADA |
+| --- | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| [gemma-4-26B-A4B-it-DASHQ-INT4-g32](https://huggingface.co/jkim96/gemma-4-26B-A4B-it-DASHQ-INT4-g32) | 17.94 GB | 51.61 GB | float16 | 341.46 | 49.0 | 65.0 | 43.8 | 67.7 | 54.3 | 56.9 | 31.2 | 40.6 | 59.2 | 22.1 |
+| [gemma-4-26B-A4B-it-DASHQ-INT4-g64](https://huggingface.co/jkim96/gemma-4-26B-A4B-it-DASHQ-INT4-g64) | 16.40 GB | 51.61 GB | float16 | 358.38 | 50.4 | 65.7 | 44.9 | 68.7 | 53.3 | 57.6 | 33.8 | 48.7 | 59.5 | 21.9 |
+| [gemma-4-26B-A4B-it-DASHQ-INT4-g128](https://huggingface.co/jkim96/gemma-4-26B-A4B-it-DASHQ-INT4-g128) | 15.88 GB | 51.61 GB | float16 | 383.75 | 50.3 | 68.9 | 46.5 | 68.1 | 53.2 | 57.6 | 33.4 | 43.1 | 58.6 | 23.6 |
+| [gemma-4-26B-A4B-it-DASHQ-INT3-g32](https://huggingface.co/jkim96/gemma-4-26B-A4B-it-DASHQ-INT3-g32) | 15.49 GB | 51.61 GB | float16 | 468.83 | 48.6 | 63.6 | 42.7 | 67.9 | 52.7 | 54.9 | 32.0 | 43.3 | 57.7 | 22.3 |
+| [gemma-4-26B-A4B-it-DASHQ-INT3-g64](https://huggingface.co/jkim96/gemma-4-26B-A4B-it-DASHQ-INT3-g64) | 13.96 GB | 51.61 GB | float16 | 693.18 | 49.4 | 66.2 | 45.1 | 70.5 | 54.2 | 56.6 | 34.2 | 36.0 | 58.4 | 23.5 |
+| [gemma-4-26B-A4B-it-DASHQ-INT3-g128](https://huggingface.co/jkim96/gemma-4-26B-A4B-it-DASHQ-INT3-g128) | 13.43 GB | 51.61 GB | float16 | 843.94 | 48.5 | 65.6 | 42.0 | 68.5 | 53.4 | 59.9 | 30.6 | 32.4 | 58.8 | 25.4 |
+| [gemma-4-26B-A4B-it-DASHQ-INT2-g32](https://huggingface.co/jkim96/gemma-4-26B-A4B-it-DASHQ-INT2-g32) | 11.81 GB | 51.61 GB | float16 | 3635.16 | 44.8 | 59.2 | 41.0 | 68.2 | 47.5 | 54.5 | 27.8 | 35.1 | 52.6 | 17.7 |
+| [gemma-4-26B-A4B-it-DASHQ-INT2-g32-fp8_e5m2](https://huggingface.co/jkim96/gemma-4-26B-A4B-it-DASHQ-INT2-g32-fp8_e5m2) | 10.28 GB | 51.61 GB | fp8_e5m2 | 2779.06 | 41.0 | 48.3 | 36.3 | 62.9 | 44.0 | 53.4 | 29.4 | 31.7 | 50.7 | 12.2 |
+
 ### Mistral-Medium-3.5-128B
 
 | Checkpoint | Quantized Size | Original Size | Scale/Zero Dtype | PPL | ZS Avg | ARC-E | ARC-C | PIQA | HellaSwag | WinoGrande | OBQA | CSQA | TruthfulQA | LAMBADA |
