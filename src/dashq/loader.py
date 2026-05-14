@@ -172,17 +172,6 @@ def load_quantized(
         )
         if hasattr(model, "tie_weights"):
             model.tie_weights()
-        if hasattr(model, "get_input_embeddings") and hasattr(model, "get_output_embeddings"):
-            input_embeddings = model.get_input_embeddings()
-            output_embeddings = model.get_output_embeddings()
-            if (
-                input_embeddings is not None
-                and output_embeddings is not None
-                and hasattr(input_embeddings, "weight")
-                and hasattr(output_embeddings, "weight")
-                and input_embeddings.weight.shape == output_embeddings.weight.shape
-            ):
-                output_embeddings._parameters["weight"] = input_embeddings._parameters["weight"]
     if replaced != len(dashq_config["quantized_modules"]):
         raise RuntimeError("Failed to replace all DASH-Q quantized modules.")
 
