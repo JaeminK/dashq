@@ -108,6 +108,21 @@ def _replace_quantized_modules(
     return replaced
 
 
+def _tie_missing_lm_head(model: nn.Module, checkpoint_keys: set[str]) -> None:
+    if "lm_head.weight" in checkpoint_keys or not hasattr(model, "lm_head"):
+        return
+    if "model.language_model.embed_tokens.weight" not in checkpoint_keys:
+        return
+    language_model = getattr(getattr(model, "model", None), "language_model", None)
+    embed_tokens = getattr(language_model, "embed_tokens", None)
+    lm_head = getattr(model, "lm_head", None)
+    if embed_tokens is None or lm_head is None:
+        return
+    if not hasattr(embed_tokens, "weight") or not hasattr(lm_head, "weight"):
+        return
+    lm_head._parameters["weight"] = embed_tokens._parameters["weight"]
+
+
 def _compile_quantized_dequantization(
     model: nn.Module,
     compile_kwargs: dict[str, Any] | None = None,
@@ -162,16 +177,18 @@ def load_quantized(
         trust_remote_code=trust_remote_code,
     )
     loader = MODEL_LOADERS[resolved_model_class]
+    checkpoint_keys = _checkpoint_keys(snapshot_path)
     with init_empty_weights():
         model = loader.from_config(config, trust_remote_code=trust_remote_code)
         expose_tensorized_moe_experts_as_linears(model)
         replaced = _replace_quantized_modules(
             model,
             dashq_config["quantized_modules"],
-            _checkpoint_keys(snapshot_path),
+            checkpoint_keys,
         )
         if hasattr(model, "tie_weights"):
             model.tie_weights()
+        _tie_missing_lm_head(model, checkpoint_keys)
     if replaced != len(dashq_config["quantized_modules"]):
         raise RuntimeError("Failed to replace all DASH-Q quantized modules.")
 
