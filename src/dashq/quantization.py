@@ -96,6 +96,12 @@ class PackedQuantizedLinear(nn.Module):
         weight = (w_int - self.zero.to(dtype)) * self.scale.to(dtype)
         return weight.view(self.out_features, self.quant_in_features).to(dtype=dtype)
 
+    @property
+    def weight(self) -> torch.Tensor:
+        """Dequantized weight for code paths reading `.weight` directly
+        (e.g. NemotronH fused Mamba kernels)."""
+        return self.dequantize_weight(self.linear_dtype)
+
     def compile_dequantization(self, **compile_kwargs: Any) -> bool:
         if not hasattr(torch, "compile"):
             return False
